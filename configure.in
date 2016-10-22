@@ -1,0 +1,71 @@
+AC_INIT(configure.in)
+AM_CONFIG_HEADER(config.h)
+
+RMC_VERSION=0.6
+
+VERSION=$RMC_VERSION
+PACKAGE=rmc
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+AM_MAINTAINER_MODE
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+AM_PROG_LIBTOOL
+AM_PROG_LEX
+AC_PROG_YACC
+AC_ISC_POSIX
+AC_STDC_HEADERS
+
+AM_PATH_GBDD(0.9, [])
+AM_PATH_GAUTOMATA(0.6, [])
+
+AC_SUBST(GBDD_LIBS)
+AC_SUBST(GAUTOMATA_LIBS)
+
+AM_MAINTAINER_MODE
+
+AC_SUBST(YACC)
+AC_SUBST(LEXLIB)
+
+
+AC_ARG_ENABLE(doxygen, 
+AC_HELP_STRING([--enable-doxygen=DOXYGEN], [use doxygen (default is yes)]),
+[case "${enableval}" in
+  no)  DOXYGEN="";;
+  *) 
+	if test -n"$enableval"; then
+		DOXYGEN=${enableval}
+	else
+		DOXYGEN=doxygen
+	fi;
+esac],
+[
+   DOXYGEN="doxygen"
+])
+if test "x$DOXYGEN" != "x"; then
+AC_CHECK_PROG(DOXYGEN, $DOXYGEN, $DOXYGEN, "")
+fi;
+AM_CONDITIONAL(HAS_DOXYGEN, test "x$DOXYGEN" != "x")
+
+CXXFLAGS="$CXXFLAGS -frtti -Wall"
+
+
+AC_OUTPUT([
+Makefile
+formula/Makefile
+transducer/Makefile
+engine/Makefile
+engine/subset/Makefile
+engine/eqcol/Makefile
+engine/fixpoint/Makefile
+engine/tc/Makefile
+engine/linear/Makefile
+modelchecker/Makefile
+frontend/Makefile
+structure/Makefile
+examples/Makefile
+Doxyfile
+rmc.spec
+])
